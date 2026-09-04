@@ -5,7 +5,7 @@ Simple Binary Search Tree implementation in Ruby with accompanying RSpec tests.
 ## What this repo contains
 
 - `lib/node.rb` — Node class for BST nodes.
-- `lib/tree.rb` — Tree class implementing building, insertion, search (`include?`), deletion (work in progress), and pretty printing.
+- `lib/tree.rb` — Tree class implementing building, insertion, search (`include?`), deletion, and pretty printing.
 - `spec/` — RSpec tests for `Node` and `Tree` behavior.
 - `Gemfile` — project dependencies for running the tests.
 
@@ -38,13 +38,13 @@ puts t.include?(4) # => true
 # pretty print
 t.pretty_print
 
-# delete (note: deletion behavior currently under development)
+# delete (note: deletion implemented; supports leaf, one-child, and two-children cases)
 t.delete(4)
 ```
 
 ## Notes
 
-- The `Tree#delete` method currently has a failing implementation in the repository; running the full test suite (`rspec`) will show failing specs related to deletion.  If you want, I can implement a stable recursive `delete` helper that covers the three deletion cases (no children, one child, two children).
+- The `Tree#delete` method has been implemented (iterative handling of no-children, one-child, and two-children cases). Run the test suite (`bundle exec rspec`) to verify behavior.
 
 - The tests are the canonical source of expected behavior; if you make changes, run `bundle exec rspec` to verify behavior.
 

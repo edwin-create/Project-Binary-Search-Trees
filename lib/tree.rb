@@ -22,7 +22,7 @@ class Tree
     false
   end
 
-  def insert(value) # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
+  def insert(value) # rubocop:disable Metrics/MethodLength,Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
     if @root.nil?
       @root = Node.new(value)
       return
@@ -40,6 +40,65 @@ class Tree
         return
       else
         current = current.right
+      end
+    end
+  end
+
+  def delete(value) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity
+    return nil if @root.nil?
+
+    parent = nil
+    current = @root
+
+    # phase1: Traverse through the tree to find the node to delete.
+    while current && current.data != value
+      parent = current
+      current = if current.data > value
+                  current.left
+                else
+                  current.right
+                end
+    end
+
+    # case1: If the node to delete is a leaf node, simply remove it from the tree.
+    # Stop if the value wasn't in the tree
+    return nil if current.nil?
+
+    if current.left.nil? && current.right.nil?
+      if parent.nil?
+        @root = nil
+      elsif parent.left == current
+        parent.left = nil
+      else
+        parent.right = nil
+      end
+
+    # case2: If the node to delete has one child, replace the node with its child.
+
+    elsif current.left.nil? || current.right.nil?
+      child = current.left || current.right
+
+      if parent.nil?
+        @root = child
+      elsif parent.left == current
+        parent.left = child
+      else
+        parent.right = child
+      end
+    # case3: If the node to delete has two children, find the successor (the smallest value in the right subtree), replace the node's value with the successor's value, and then delete the successor node. # rubocop:disable Layout/LineLength
+    else
+      successor_parent = current
+      successor = current.right
+      while successor.left
+        successor_parent = successor
+        successor = successor.left
+      end
+      current.data = successor.data
+      child = successor.right
+      if successor_parent.left == successor
+        successor_parent.left = child
+      else
+        successor_parent.right = child
       end
     end
   end
