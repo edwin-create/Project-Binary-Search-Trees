@@ -111,6 +111,22 @@ class Tree
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", is_left: true)
   end
 
+  def level_order
+    return enum_for(:level_order) unless block_given?
+    return self if @root.nil?
+
+    queue = [@root]
+
+    until queue.empty?
+      current = queue.shift
+      yield current.data if block_given?
+      queue << current.left if current.left
+      queue << current.right if current.right
+
+    end
+    self
+  end
+
   private # Good practice: hide build_tree from outside users
 
   # 3. build_tree runs recursively using the sorted_array passed from initialize

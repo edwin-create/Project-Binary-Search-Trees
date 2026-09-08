@@ -51,4 +51,34 @@ describe Tree do
       expect(tree.root.left.right).to be_nil
     end
   end
+
+  describe '#level_order' do
+    it 'yields each value in level order' do
+      tree = Tree.new([1, 2, 3, 4, 5])
+      result = []
+
+      tree.level_order do |value|
+        result << value
+      end
+
+      expect(result).to eq([3, 2, 5, 1, 4])
+    end
+
+    it 'returns self when given a block' do
+      tree = Tree.new([1, 2, 3, 4, 5])
+
+      expect(tree.level_order { |value| value }).to eq(tree)
+    end
+
+    it 'returns an Enumerator when no block is given' do
+      tree = Tree.new([1, 2, 3, 4, 5])
+
+      expect(tree.level_order).to be_a(Enumerator)
+    end
+    it 'returns self when given a block, even if the tree is empty' do
+      tree = Tree.new([])
+
+      expect(tree.level_order { |value| value }).to eq(tree)
+    end
+  end
 end
