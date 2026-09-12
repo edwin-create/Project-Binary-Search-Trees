@@ -111,23 +111,144 @@ class Tree
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", is_left: true)
   end
 
-  def level_order
+  # def level_order
+  #   return enum_for(:level_order) unless block_given?
+  #   return self if @root.nil?
+  #
+  #   queue = [@root]
+  #
+  #   until queue.empty?
+  #     current = queue.shift
+  #     yield current.data if block_given?
+  #     queue << current.left if current.left
+  #     queue << current.right if current.right
+  #   end
+  #
+  #   self
+  # end
+
+  def level_order(&block)
     return enum_for(:level_order) unless block_given?
     return self if @root.nil?
 
     queue = [@root]
 
-    until queue.empty?
-      current = queue.shift
-      yield current.data if block_given?
-      queue << current.left if current.left
-      queue << current.right if current.right
-
-    end
+    level_order_helper(queue, &block)
     self
   end
 
-  private # Good practice: hide build_tree from outside users
+  def inorder(&block)
+    return enum_for(:inorder) unless block_given?
+    return self if @root.nil?
+
+    inorder_helper(@root, &block)
+    self
+  end
+
+  def preorder(&block)
+    return enum_for(:preorder) unless block_given?
+    return self if @root.nil?
+
+    preorder_helper(@root, &block)
+    self
+  end
+
+  def postorder(&block)
+    return enum_for(:postorder) unless block_given?
+    return self if @root.nil?
+
+    postorder_helper(@root, &block)
+    self
+  end
+
+  def height(value) # rubocop:disable Metrics/MethodLength
+    current = @root
+
+    return if current.nil?
+
+    while current && current.data != value
+      current = if value < current.data
+
+                  current.left
+                else
+                  current.right
+                end
+    end
+    return nil if current.nil?
+
+    height_helper(current)
+  end
+
+  def depth(value) # rubocop:disable Metrics/MethodLength
+    current = @root
+    count = 0
+
+    while current && current.data != value
+      if value < current.data
+        current = current.left
+        count += 1 # rubocop:disable Style/IdenticalConditionalBranches
+      else
+        current = current.right
+        count += 1 # rubocop:disable Style/IdenticalConditionalBranches
+      end
+    end
+
+    return nil if current.nil?
+
+    count if current.data == value
+  end
+
+  private
+
+  #  Good practice: hide height_helper from outside users
+  def height_helper(node)
+    return -1 if node.nil?
+
+    1 + [height_helper(node.left), height_helper(node.right)].max
+  end
+
+  #  Good practice: hide postorder_helper from outside users
+  def postorder_helper(node, &block)
+    return if node.nil?
+
+    postorder_helper(node.left, &block)
+    postorder_helper(node.right, &block)
+    yield node.data
+  end
+
+  # Good practice: hide preorder_helper from outside users
+  def preorder_helper(node, &block)
+    return if node.nil?
+
+    yield node.data
+    preorder_helper(node.left, &block)
+    preorder_helper(node.right, &block)
+  end
+
+  # Good practice: hide level_order_helper from outside users
+
+  def level_order_helper(queue, &block)
+    return if queue.empty?
+
+    current = queue.shift
+    yield current.data if block_given?
+    queue << current.left if current.left
+    queue << current.right if current.right
+
+    level_order_helper(queue, &block)
+  end
+
+  # Good practice: hide inorder_helper from outside users
+
+  def inorder_helper(node, &block)
+    return if node.nil?
+
+    inorder_helper(node.left, &block)
+    yield node.data
+    inorder_helper(node.right, &block)
+  end
+
+  # Good practice: hide build_tree from outside users
 
   # 3. build_tree runs recursively using the sorted_array passed from initialize
   def build_tree(array)

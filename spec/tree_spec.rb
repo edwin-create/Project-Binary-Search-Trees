@@ -81,4 +81,154 @@ describe Tree do
       expect(tree.level_order { |value| value }).to eq(tree)
     end
   end
+  describe '#inorder' do
+    it 'returns self when given a block' do
+      tree = Tree.new([2, 1, 3, 5, 4])
+
+      expect(tree.inorder { |value| value }).to eq(tree)
+    end
+
+    it 'returns an Enumerator when no block is given' do
+      tree = Tree.new([2, 1, 3, 5, 4])
+
+      expect(tree.inorder).to be_a(Enumerator)
+    end
+    it 'returns self when given a block, even if the tree is empty' do
+      tree = Tree.new([])
+
+      expect(tree.inorder { |value| value }).to eq(tree)
+    end
+    it 'yields each value in inorder' do
+      tree = Tree.new([1, 2, 3, 4, 5])
+      result = []
+
+      tree.inorder do |value|
+        result << value
+      end
+
+      expect(result).to eq([1, 2, 3, 4, 5])
+    end
+    it 'yields values in inorder for a tree with two children' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+      result = []
+
+      tree.inorder do |value|
+        result << value
+      end
+
+      expect(result).to eq([1, 2, 3, 4, 5, 6, 7])
+    end
+  end
+  describe '#preorder' do # rubocop:disable Metrics/BlockLength
+    it 'returns self when given a block' do
+      tree = Tree.new([2, 1, 3, 5, 4])
+
+      expect(tree.preorder { |value| value }).to eq(tree)
+    end
+
+    it 'returns an Enumerator when no block is given' do
+      tree = Tree.new([2, 1, 3, 5, 4])
+
+      expect(tree.preorder).to be_a(Enumerator)
+    end
+    it 'returns self when given a block, even if the tree is empty' do
+      tree = Tree.new([])
+
+      expect(tree.preorder { |value| value }).to eq(tree)
+    end
+    it 'yields each value in preorder' do
+      tree = Tree.new([1, 2, 3, 4, 5])
+      result = []
+
+      tree.preorder do |value|
+        result << value
+      end
+
+      expect(result).to eq([3, 2, 1, 5, 4])
+    end
+    it 'yields values in preorder for a tree with two children' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+      result = []
+
+      tree.preorder do |value|
+        result << value
+      end
+
+      expect(result).to eq([4, 2, 1, 3, 6, 5, 7])
+    end
+  end
+  describe '#postorder' do
+    it 'returns self when given a block' do
+      tree = Tree.new([2, 1, 3, 5, 4])
+
+      expect(tree.postorder { |value| value }).to eq(tree)
+    end
+
+    it 'returns an Enumerator when no block is given' do
+      tree = Tree.new([2, 1, 3, 5, 4])
+
+      expect(tree.postorder).to be_a(Enumerator)
+    end
+
+    it 'returns self when given a block, even if the tree is empty' do
+      tree = Tree.new([])
+
+      expect(tree.postorder { |value| value }).to eq(tree)
+    end
+
+    it 'yields each value in postorder' do
+      tree = Tree.new([1, 2, 3, 4, 5])
+      result = []
+
+      tree.postorder do |value|
+        result << value
+      end
+
+      expect(result).to eq([1, 2, 4, 5, 3])
+    end
+
+    it 'yields values in postorder for a tree with two children' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+      result = []
+
+      tree.postorder do |value|
+        result << value
+      end
+
+      expect(result).to eq([1, 3, 2, 5, 7, 6, 4])
+    end
+  end
+  describe '#height' do
+    it 'returns the height of the node containing that value' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+      expect(tree.height(2)).to eq(1)
+    end
+  end
+  describe '#depth' do
+    it 'returns 0 for the root node' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      expect(tree.depth(4)).to eq(0)
+    end
+
+    it 'returns the number of edges from the root to the node' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      expect(tree.depth(2)).to eq(1)
+      expect(tree.depth(1)).to eq(2)
+      expect(tree.depth(7)).to eq(2)
+    end
+
+    it 'returns nil if the value is not found' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      expect(tree.depth(10)).to be_nil
+    end
+
+    it 'returns nil for an empty tree' do
+      tree = Tree.new([])
+
+      expect(tree.depth(4)).to be_nil
+    end
+  end
 end
