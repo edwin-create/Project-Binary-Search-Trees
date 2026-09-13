@@ -198,7 +198,45 @@ class Tree
     count if current.data == value
   end
 
+  def find(value) # rubocop:disable Metrics/MethodLength
+    current = @root
+    return nil if current.nil?
+    return current if current.data == value
+
+    while current && current.data != value
+      current = if current.data > value
+                  current.left
+                else
+                  current.right
+                end
+    end
+    return nil if current.nil?
+
+    current
+  end
+
+  def balanced?
+    return true if @root.nil?
+
+    return true if @root.left.nil? && @root.right.nil?
+
+    balanced_helper(@root)
+  end
+
   private
+
+  def balanced_helper(node)
+    return true if node.nil?
+
+    left_height = height_helper(node.left)
+    right_height = height_helper(node.right)
+
+    flag = (left_height - right_height).abs
+
+    return false if flag > 1
+
+    balanced_helper(node.left) && balanced_helper(node.right)
+  end
 
   #  Good practice: hide height_helper from outside users
   def height_helper(node)

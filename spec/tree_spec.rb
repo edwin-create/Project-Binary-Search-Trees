@@ -231,4 +231,86 @@ describe Tree do
       expect(tree.depth(4)).to be_nil
     end
   end
+  describe '#find' do # rubocop:disable Metrics/BlockLength
+    it 'returns the node containing the given value' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      node = tree.find(5)
+
+      expect(node).to be_a(Node)
+      expect(node.data).to eq(5)
+    end
+
+    it 'returns the root node when searching for the root value' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      node = tree.find(4)
+
+      expect(node).to eq(tree.root)
+    end
+
+    it 'returns the correct node when the value is in the left subtree' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      node = tree.find(1)
+
+      expect(node.data).to eq(1)
+    end
+
+    it 'returns the correct node when the value is in the right subtree' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      node = tree.find(7)
+
+      expect(node.data).to eq(7)
+    end
+
+    it 'returns nil when the value does not exist' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      expect(tree.find(10)).to be_nil
+    end
+
+    it 'returns nil when searching an empty tree' do
+      tree = Tree.new([])
+
+      expect(tree.find(5)).to be_nil
+    end
+  end
+  describe '#balanced?' do
+    it 'returns true for a balanced tree' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      expect(tree.balanced?).to be true
+    end
+
+    it 'returns true for a tree with one node' do
+      tree = Tree.new([1])
+
+      expect(tree.balanced?).to be true
+    end
+
+    it 'returns true for an empty tree' do
+      tree = Tree.new([])
+
+      expect(tree.balanced?).to be true
+    end
+
+    it 'returns true when the subtree heights differ by one' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      tree.root.left.left.left = Node.new(0)
+
+      expect(tree.balanced?).to be true
+    end
+
+    it 'returns false when a subtree heights differ by more than one' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      tree.root.left.left.left = Node.new(0)
+      tree.root.left.left.left.left = Node.new(-1)
+
+      expect(tree.balanced?).to be false
+    end
+  end
 end
