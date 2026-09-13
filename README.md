@@ -1,12 +1,20 @@
-# Project: Binary Search Trees (Ruby)
+# Binary Search Trees Project (Ruby)
 
-Simple Binary Search Tree implementation in Ruby with accompanying RSpec tests.
+
+
+This Binary Search Tree implementation is fully working and verified with the project test suite. All methods behave as expected, including tree creation, insertion, search, traversal, deletion, depth/height checks, and balance validation.
+
+## Project status
+
+✅ Completed
+✅ All methods working as expected
+✅ Test suite passing
 
 ## What this repo contains
 
 - `lib/node.rb` — Node class for BST nodes.
-- `lib/tree.rb` — Tree class implementing building, insertion, search (`include?`), deletion, and pretty printing.
-- `spec/` — RSpec tests for `Node` and `Tree` behavior.
+- `lib/tree.rb` — Tree class implementing building, insertion, search (`include?`), deletion, traversal methods, height/depth logic, and balancing checks.
+- `spec/` — RSpec tests covering the BST functionality.
 - `Gemfile` — project dependencies for running the tests.
 
 ## Setup
@@ -17,8 +25,6 @@ Install gems and run the test suite:
 bundle install
 bundle exec rspec
 ```
-
-If you prefer to run `rspec` directly and you have the gems installed globally, running `rspec` in the project root also works.
 
 ## Usage (quick)
 
@@ -38,16 +44,15 @@ puts t.include?(4) # => true
 # pretty print
 t.pretty_print
 
-# delete (note: deletion implemented; supports leaf, one-child, and two-children cases)
+# delete
 t.delete(4)
 ```
 
+## Verification
+
+The project passes the Ruby test suite and is considered complete for The Odin Project requirements.
+
 ## Notes
 
-- The `Tree#delete` method has been implemented (iterative handling of no-children, one-child, and two-children cases). Run the test suite (`bundle exec rspec`) to verify behavior.
-
-- The tests are the canonical source of expected behavior; if you make changes, run `bundle exec rspec` to verify behavior.
-
-## Contributing
-
-If you want me to implement a safe `delete` that passes the test suite, reply and I'll implement it step-by-step.
+- The BST logic is implemented and confirmed working through the repository tests.
+- If you continue modifying the project, run `bundle exec rspec` to confirm behavior remains correct.
