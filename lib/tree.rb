@@ -223,6 +223,22 @@ class Tree
     balanced_helper(@root)
   end
 
+  def rebalance # rubocop:disable Metrics/MethodLength
+    return if @root.nil?
+
+    queue = [@root]
+    values = []
+
+    until queue.empty?
+      current = queue.shift
+      values << current.data
+      queue << current.left if current.left
+      queue << current.right if current.right
+    end
+    sorted_queue = values.sort.uniq
+    @root = build_tree(sorted_queue)
+  end
+
   private
 
   def balanced_helper(node)

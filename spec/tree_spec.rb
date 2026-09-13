@@ -313,4 +313,66 @@ describe Tree do
       expect(tree.balanced?).to be false
     end
   end
+  describe '#rebalance' do
+    it 'rebalances an unbalanced tree' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      tree.root.right.right.right = Node.new(8)
+      tree.root.right.right.right.right = Node.new(9)
+
+      expect(tree.balanced?).to be false
+
+      tree.rebalance
+
+      expect(tree.balanced?).to be true
+    end
+
+    it 'keeps all the original values' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      tree.root.right.right.right = Node.new(8)
+      tree.root.right.right.right.right = Node.new(9)
+
+      tree.rebalance
+
+      values = []
+      tree.inorder { |value| values << value }
+
+      expect(values).to eq([1, 2, 3, 4, 5, 6, 7, 8, 9])
+    end
+
+    it 'does not lose values when rebalancing a tree containing duplicate input values' do
+      tree = Tree.new([1, 2, 2, 3, 4, 5, 5, 6, 7])
+
+      tree.root.right.right.right = Node.new(8)
+
+      tree.rebalance
+
+      values = []
+      tree.inorder { |value| values << value }
+
+      expect(values).to eq([1, 2, 3, 4, 5, 6, 7, 8])
+      expect(tree.balanced?).to be true
+    end
+
+    it 'handles an already balanced tree' do
+      tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+
+      expect(tree.balanced?).to be true
+
+      tree.rebalance
+
+      expect(tree.balanced?).to be true
+      expect(tree.root.data).to eq(4)
+    end
+
+    it 'handles an empty tree' do
+      tree = Tree.new([])
+
+      tree.rebalance
+
+      expect(tree.root).to be_nil
+      expect(tree.balanced?).to be true
+    end
+  end
 end
